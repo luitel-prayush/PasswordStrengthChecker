@@ -12,9 +12,6 @@ def calculate_entropy(password):
     if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         charset += 32
 
-    print(len(password))
-    print(charset)
-    print(math.log2(charset))
     entropy = len(password) * math.log2(charset)
     return round(entropy, 2)
 
