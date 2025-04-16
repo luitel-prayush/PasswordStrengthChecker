@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Password Strength Checker</title>
+    <style>
+        body { font-family: Arial; padding: 2rem; background: #f5f5f5; }
+        input[type="password"] { width: 300px; padding: 8px; margin-bottom: 1rem; }
+        button { padding: 10px 20px; }
+        .result { margin-top: 1rem; background: white; padding: 1rem; border-radius: 8px; }
+        .bad { color: red; }
+        .good { color: green; }
+    </style>
+</head>
+<body>
+<h1>Password Strength Checker 🔐</h1>
+<form method="POST">
+    <label>
+        <input type="password" name="password" placeholder="Enter password..." required>
+    </label>
+    <br>
+    <button type="submit">Check</button>
+</form>
+
+{% if result %}
+<div class="result">
+    <h2>Result:</h2>
+    <p><strong>Password:</strong> {{ result.password }}</p>
+    <p><strong>Entropy:</strong> {{ result.entropy }} bits</p>
+    <p>
+        <strong>Strength:</strong>
+        {% if result.strong %}
+        <span class="good">Strong ✅</span>
+        {% else %}
+        <span class="bad">Weak ❌</span>
+        {% endif %}
+    </p>
+    <p><strong>Pwned:</strong>
+        {% if result.pwned_count > 0 %}
+        <span class="bad">{{ result.pwned_count }} times 😨</span>
+        {% else %}
+        <span class="good">Not found ✅</span>
+        {% endif %}
+    </p>
+    {% if not result.strong %}
+    <ul>
+        {% for issue, failed in result.issues.items() %}
+        {% if failed %}
+        <li class="bad">{{ issue }}</li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endif %}
+</body>
+</html>
