@@ -4,6 +4,8 @@ import re
 import math
 import hashlib
 import requests
+import secrets
+import string
 
 app = Flask(__name__)
 
@@ -54,22 +56,32 @@ def check_knownBreaches(password):
             return int(count)
     return 0
 
+def generate_strong_password(length=16):
+    charset = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(secrets.choice(charset) for _ in range(length))
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = None
+    suggested_password = None
+
     if request.method == "POST":
-        password = request.form.get("password")
-        valid_password, errors = check_password_strength(password)
-        entropy = calculate_entropy(password)
-        pwned_count = check_knownBreaches(password)
-        result = {
-            "password": password,
-            "strong": valid_password,
-            "issues": errors,
-            "entropy": entropy,
-            "pwned_count": pwned_count
-        }
-    return render_template("index.html", result=result)
+        if "generate" in request.form:
+            suggested_password = generate_strong_password()
+        else:
+            password = request.form.get("password")
+            strong, issues = check_password_strength(password)
+            entropy = calculate_entropy(password)
+            pwned_count = check_knownBreaches(password)
+            result = {
+                "password": password,
+                "strong": strong,
+                "issues": issues,
+                "entropy": entropy,
+                "pwned_count": pwned_count
+            }
+
+    return render_template("index.html", result=result, suggested_password=suggested_password)
 
 if __name__ == "__main__":
     app.run(debug=True)
