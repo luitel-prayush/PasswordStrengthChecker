@@ -57,8 +57,35 @@ def check_knownBreaches(password):
     return 0
 
 def generate_strong_password(length=16):
-    charset = string.ascii_letters + string.digits + string.punctuation
-    return ''.join(secrets.choice(charset) for _ in range(length))
+    if length < 12:
+        raise ValueError("Password length should be at least 12 for security.")
+
+    # Character sets
+    lowercase = 'abcdefghjkmnpqrstuvwxyz'  # removed: i, l
+    uppercase = 'ABCDEFGHJKMNPQRSTUVWXYZ'  # removed: I, O
+    digits = '23456789'                   # removed: 0, 1
+    symbols = '!@#$%^&*()-_=+[]{};:,.<>?'
+
+    # Make sure we have at least one of each
+    required = [
+        secrets.choice(lowercase),
+        secrets.choice(uppercase),
+        secrets.choice(digits),
+        secrets.choice(symbols)
+    ]
+
+    # Combined allowed characters (excluding similar ones)
+    all_allowed = lowercase + uppercase + digits + symbols
+
+    # Fill the rest of the password
+    remaining = [secrets.choice(all_allowed) for _ in range(length - len(required))]
+
+    # Mix it all up
+    full_password = required + remaining
+    secrets.SystemRandom().shuffle(full_password)
+
+    return ''.join(full_password)
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -67,7 +94,11 @@ def index():
 
     if request.method == "POST":
         if "generate" in request.form:
-            suggested_password = generate_strong_password()
+            try:
+                length = int(request.form.get("length", 16))
+                suggested_password = generate_strong_password(length)
+            except Exception as e:
+                suggested_password = f"Error: {str(e)}"
         else:
             password = request.form.get("password")
             strong, issues = check_password_strength(password)

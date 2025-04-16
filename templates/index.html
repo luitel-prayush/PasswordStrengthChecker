@@ -21,7 +21,9 @@
 </form>
 <form method="POST">
     <button type="submit" name="generate">Suggest Stronger Password</button>
+    <input type="number" name="length" placeholder="Length (default 16)" min="12" max="64" style="margin-left: 10px;">
 </form>
+
 
 
 {% if result %}
