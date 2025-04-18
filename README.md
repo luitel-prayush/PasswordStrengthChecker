@@ -36,4 +36,24 @@ To run the python file
 - Bash command in terminal: python knownBreaches.py
 
 ## Main GUI application
+A python and flask based application that creates an input form where the user can type in a password and check the strength of the password based on the logic from passwordChecker.py, entropy of the password based on the logic from entropyCalculation.py, and the number of times the password has been part of a data breach based on the logic from entropyCalculation.py. The GUI also offers a form where the user can input a length value(min 12, max 64) for a password and ask the applicaiton to suggest a strong password.
+
+To run the GUI:
+- Run app.py through an IDE
+- Bash command in terminal: python app.py
+
+### Strong password check:
+
+<img width="477" alt="image" src="https://github.com/user-attachments/assets/f2f18e02-645b-4acc-a654-0bf1d73f86e8" />
+
+### Weak password check:
+
+<img width="477" alt="image" src="https://github.com/user-attachments/assets/46c2a07a-2019-4263-925b-ebbc34ae2f22" />
+
+### Suggest strong password(length=16):
+
+<img width="477" alt="image" src="https://github.com/user-attachments/assets/9c64c7a5-cda8-4041-98fe-36cfc88f5546" />
+
+
+
 
